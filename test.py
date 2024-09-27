@@ -1,17 +1,19 @@
+'''
+This file can be used to test what models are the best judges. It leverages the output.txt file created by analysis.py.
+The output.txt file can be created by uncommenting the code at the bottom of analysis.py.
+'''
+
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# Load environment variables from .env file
 load_dotenv()
 
 democrat_count = 0
 republican_count = 0
 total = 0
 
-# Function to get response from ChatGPT API
 def get_chatgpt_response(prompt):
-    # Get the API key from the environment variable
     api_key = os.getenv("OPENAI_API_KEY")
     
     if not api_key:
@@ -28,15 +30,13 @@ def get_chatgpt_response(prompt):
 
 custom_prompt = "Is this following tweet more favorable for the Republican or Democratic party. Reply with either 'Democratic' or 'Republican'. Do NOT say anything else besides that one word. \n "
 
-# Read file and process each line
 with open('output.txt', 'r') as file:
     for line in file:
         total += 1
         line = line.strip()
-        if line:  # Ensure it's not an empty line
+        if line:
             response = get_chatgpt_response(custom_prompt + line)
             
-            # Check response and update counters
             if "Democrat" in response:
                 democrat_count += 1
             elif "Republican" in response:
